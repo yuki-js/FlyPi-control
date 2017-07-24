@@ -1,0 +1,33 @@
+const gulp = require("gulp");
+const cProc=require("child_process");
+
+const fileList=[
+  "main.c",
+//  "communication.c",
+//  "control.c"
+];
+const gccArg=[
+  "-o",
+  __dirname+"/flypi.out",
+  ...fileList,
+  "-lpthread",
+  "-Wall",
+  "-lpigpio", "-lrt"
+];
+
+gulp.task("build",()=>{
+  cProc.execFile("gcc",gccArg,(er,so,se)=>{
+    console.log(er,so,se);
+  });
+});
+
+
+gulp.task("default",()=>{
+  console.log("fileList=",fileList);
+  console.log("gccArg=",gccArg);
+  fileList.forEach(v=>{
+    gulp.watch("./"+v,["build"]);
+  });
+  
+});
+
