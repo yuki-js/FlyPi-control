@@ -141,11 +141,11 @@ struct sensorVal getSensorValue(reg){
 }
 struct sensorVal curSensorVal;
 void* control(){
-  
   while(1){
     curSensorVal = getSensorValue();
     if(sendSensorVal==1){
-      send(cli,&curSensorVal,sizeof(struct sensorVal),0);
+      
+      send(cli,&curSensorVal,15,0);
     }
   }
 }
@@ -183,7 +183,7 @@ int initI2c(){
   if(i2cWriteByteData(i2cHandle,0x6b,0x00)<0){
     return cleanI2c();
   }
-  
+  sleep(0.5);
   if(i2cWriteByteData(i2cHandle,0x19,0x00)<0){
     return cleanI2c();
   }
@@ -236,7 +236,7 @@ int main(int argc,char* argv[]){
   }
   while(1){
     printf("control:%d %d %d %d\n",yaw,pitch,roll,thro);
-    printf("i2c:%f,%f,%f",((float)curSensorVal.accX)/16384,((float)curSensorVal.accY)/16384,((float)curSensorVal.accZ)/16384);
+    printf("i2c:%f,%f,%f",((float)curSensorVal.accX)/16384.0,((float)curSensorVal.accY)/16384.0,((float)curSensorVal.accZ)/16384.0);
     sleep(1);
   }
   return 0;
