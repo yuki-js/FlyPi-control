@@ -1,5 +1,5 @@
 const net = require('net');
-const socket = net.connect({path:"/tmp/flypi-socket"}, () => {
+const socket = net.connect("192.168.0.9:33400", () => {
   console.log("Connected to Fly Pi server");
 });
 let first=false;

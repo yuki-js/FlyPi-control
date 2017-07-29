@@ -13,11 +13,10 @@
 
 int manualMode=0;
 
-char yaw;
-char pitch;
-char roll;
-char thro;
-
+unsigned char yaw;
+unsigned char pitch;
+unsigned char roll;
+unsigned char thro;
 
 int sock;
 int i2cHandle;
@@ -25,17 +24,17 @@ int i2cHandle;
 int cleanSock();
 int cleanGPIO();
 int initSocket(){
-  sock = socket(AF_UNIX,SOCK_STREAM,0);
+  sock = socket(AF_INET,SOCK_STREAM,0);
   if (sock == -1) {
     perror("could not open socket");
     return -1;
   }
-  struct sockaddr_un sa = {0};
-  sa.sun_family = AF_UNIX;
-  strcpy(sa.sun_path,"/tmp/flypi-socket");
-  remove(sa.sun_path);
-
-  if (bind(sock,(const struct sockaddr*) &sa,sizeof(struct sockaddr_un))==-1) {
+  struct sockaddr_in sa = {0};
+  sa.sin_family = AF_INET;
+  sa.sin_port=htons(33400);
+  sa.sin_addr.s_addr=INADDR_ANY;
+  
+  if (bind(sock,(const struct sockaddr*) &sa,sizeof(struct sockaddr_in))==-1) {
     perror("socket bind error");
     return cleanSock();
   }
@@ -117,13 +116,13 @@ struct intVec3{
   int z;
 };
 struct sensorVal{
-  int16_t accX;
-  int16_t accY;
-  int16_t accZ;
-  int16_t temp;
-  int16_t gyroX;
-  int16_t gyroY;
-  int16_t gyroZ;
+  int accX;
+  int accY;
+  int accZ;
+  int temp;
+  int gyroX;
+  int gyroY;
+  int gyroZ;
 };
 struct sensorVal getSensorValue(reg){
   struct sensorVal ret;
@@ -131,8 +130,11 @@ struct sensorVal getSensorValue(reg){
   i2cWriteByte(i2cHandle,0x3B);
   
   ret.accX=i2cReadByteData(i2cHandle,0x3c)<<8|i2cReadByteData(i2cHandle,0x3C);
+  ret.accX=(ret.accX>=0x8000)?-((65535 -ret.accX) + 1):ret.accX;
   ret.accY=( i2cReadByteData(i2cHandle,0x3D)<<8|i2cReadByteData(i2cHandle,0x3E));
+  ret.accY=(ret.accY>=0x8000)?-((65535 -ret.accY) + 1):ret.accY;
   ret.accZ=(i2cReadByteData(i2cHandle,0x3F)<<8|i2cReadByteData(i2cHandle,0x40));
+  ret.accZ=(ret.accZ>=0x8000)?-((65535 -ret.accZ) + 1):ret.accZ;
   ret.temp=i2cReadByteData(i2cHandle,0x41)<<8|i2cReadByteData(i2cHandle,0x42);
   ret.gyroX=i2cReadByteData(i2cHandle,0x43)<<8|i2cReadByteData(i2cHandle,0x44);
   ret.gyroY=i2cReadByteData(i2cHandle,0x45)<<8|i2cReadByteData(i2cHandle,0x46);
