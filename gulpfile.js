@@ -1,11 +1,17 @@
 const gulp = require("gulp");
 const cProc=require("child_process");
+const os =require("os");
 
 const fileList=[
   "main.c",
 //  "communication.c",
 //  "control.c"
 ];
+const syncList=[
+  "main.c",
+  "gulpfile.js",
+  "packetBits.h"
+]
 const gccArg=[
   "-o",
   __dirname+"/flypi.out",
@@ -14,6 +20,8 @@ const gccArg=[
   "-lpigpio", "-lrt"
 ];
 let out=null;
+
+if(os.platform()=="linux"){
 gulp.task("build",()=>{
   out&&out.kill();
   cProc.execFile("gcc",gccArg,(er,so,se)=>{
@@ -26,13 +34,21 @@ gulp.task("build",()=>{
     })
   });
 });
+  
+  cProc.spawn("rsync",["--daemon","--config=/etc/rsyncd.conf"])
+  
+}else{
+  gulp.task("build",()=>{
+    cProc.execFile("rsync",["-truv",__dirname,"rsync://192.168.0.9/flypi"],()=>{
+      
+    });
+  });
+}
 
 gulp.task("default",["build"],()=>{
   console.log("fileList=",fileList);
   console.log("gccArg=",gccArg);
-  fileList.forEach(v=>{
-    gulp.watch("./"+v,["build"]);
-  });
+  gulp.watch(syncList,["build"]);
   
 });
 

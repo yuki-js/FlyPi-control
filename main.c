@@ -116,13 +116,13 @@ struct intVec3{
   int z;
 };
 struct sensorVal{
-  int accX;
-  int accY;
-  int accZ;
-  int temp;
-  int gyroX;
-  int gyroY;
-  int gyroZ;
+  int16_t accX;
+  int16_t accY;
+  int16_t accZ;
+  int16_t temp;
+  int16_t gyroX;
+  int16_t gyroY;
+  int16_t gyroZ;
 };
 struct sensorVal getSensorValue(reg){
   struct sensorVal ret;
@@ -130,11 +130,8 @@ struct sensorVal getSensorValue(reg){
   i2cWriteByte(i2cHandle,0x3B);
   
   ret.accX=i2cReadByteData(i2cHandle,0x3c)<<8|i2cReadByteData(i2cHandle,0x3C);
-  ret.accX=(ret.accX>=0x8000)?-((65535 -ret.accX) + 1):ret.accX;
-  ret.accY=( i2cReadByteData(i2cHandle,0x3D)<<8|i2cReadByteData(i2cHandle,0x3E));
-  ret.accY=(ret.accY>=0x8000)?-((65535 -ret.accY) + 1):ret.accY;
-  ret.accZ=(i2cReadByteData(i2cHandle,0x3F)<<8|i2cReadByteData(i2cHandle,0x40));
-  ret.accZ=(ret.accZ>=0x8000)?-((65535 -ret.accZ) + 1):ret.accZ;
+  ret.accY=i2cReadByteData(i2cHandle,0x3D)<<8|i2cReadByteData(i2cHandle,0x3E);
+  ret.accZ=i2cReadByteData(i2cHandle,0x3F)<<8|i2cReadByteData(i2cHandle,0x40);
   ret.temp=i2cReadByteData(i2cHandle,0x41)<<8|i2cReadByteData(i2cHandle,0x42);
   ret.gyroX=i2cReadByteData(i2cHandle,0x43)<<8|i2cReadByteData(i2cHandle,0x44);
   ret.gyroY=i2cReadByteData(i2cHandle,0x45)<<8|i2cReadByteData(i2cHandle,0x46);
