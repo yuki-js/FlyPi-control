@@ -4,8 +4,8 @@ const os =require("os");
 
 const fileList=[
   "main.c",
-//  "communication.c",
-//  "control.c"
+  //  "communication.c",
+  //  "control.c"
 ];
 const syncList=[
   "main.c",
@@ -17,29 +17,42 @@ const gccArg=[
   __dirname+"/flypi.out",
   ...fileList,
   "-lpthread",
-  "-lpigpio", "-lrt"
+  "-lpigpio", "-lrt","-lm"
 ];
-let out=null;
+let out=null
 
 if(os.platform()=="linux"){
-gulp.task("build",()=>{
-  out&&out.kill();
-  cProc.execFile("gcc",gccArg,(er,so,se)=>{
-    console.log(se);
+  function re(){
     out=cProc.spawn(gccArg[1],{stdio:["ignore",process.stdout,process.stderr]})
-    //out.stdout.on("data",(d)=>console.log(d.toString()));
-    //out.stderr.on("data",(d)=>console.log(d.toString()));
-    out.on("close",(code)=>{
+    out.once("exit",(code)=>{
       console.log("Exited with "+code);
+      setTimeout(re,5000)
     })
-  });
-});
+  }
+
   
-  cProc.spawn("rsync",["--daemon","--config=/etc/rsyncd.conf"])
+  gulp.task("build",()=>{
+    out&&out.kill();
+    if(!out){
+      cProc.execFile("gcc",gccArg,(er,so,se)=>{
+        console.log(se);
+        re()
+      });
+    }else{
+      out.once("exit",()=>{
+        cProc.execFile("gcc",gccArg,(er,so,se)=>{
+          console.log(se);
+          re()
+        });
+      });
+    }
+  });
+  
+  //cProc.spawn("rsync",["--daemon","--config=/etc/rsyncd.conf"])
   
 }else{
   gulp.task("build",()=>{
-    cProc.execFile("rsync",["-truv",__dirname,"rsync://192.168.0.9/flypi"],()=>{
+    cProc.exec("rsync -truv ./ rsync://flypi.local/flypi",()=>{
       
     });
   });
@@ -48,6 +61,7 @@ gulp.task("build",()=>{
 gulp.task("default",["build"],()=>{
   console.log("fileList=",fileList);
   console.log("gccArg=",gccArg);
+  console.log("dir:".__dirname);
   gulp.watch(syncList,["build"]);
   
 });

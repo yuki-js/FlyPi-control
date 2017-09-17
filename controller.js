@@ -1,10 +1,21 @@
 const net = require('net');
-const socket = net.connect("192.168.0.9:33400", () => {
+const socket = net.connect(33400,"flypi.local", () => {
   console.log("Connected to Fly Pi server");
 });
+
+function getRotation(a, b, c) {
+	var radians = Math.atan2(a,Math.sqrt(c*c + b*b));
+  return -radians * (180 / Math.PI);
+}
+function getXRotation(x, y, z) {
+	return getRotation(y, x, z);
+}
+function getYRotation(x, y, z) {
+	return getRotation(x, y, z);
+}
 let first=false;
 let firstData=[];
-const fItmByte=1+16+4+3;
+const fItmByte=1+16+4+3+4;
 socket.on("data",data=>{
   let len=Buffer.byteLength(data);
   if(!first){
@@ -19,14 +30,14 @@ socket.on("data",data=>{
     console.log(firstData);
     first=true;
   }
-  if(len==2*7){//it is sensor data
-    let sens=[data.readInt16LE(0),data.readInt16LE(2),data.readInt16LE(4)];
-    console.log("sensor(raw,Int16LE):",sens);
-    let angleY=Math.atan2(sens[0],Math.abs(sens[1])+sens[2])*180/Math.PI;
-    let angleX=Math.atan2(sens[1],Math.abs(sens[0])+sens[2])*180/Math.PI;
-  }
+  if(len==12){//it is sensor data
+    let sens=[data.readFloatLE(0),data.readFloatLE(4),data.readFloatLE(8)];
+    //console.log("sensor(raw,FloatLE):",sens);
+    console.log(getXRotation(...sens)+"\t"+getYRotation(...sens));
+  }else{
   
-  console.log(">",data);
+    console.log(">",data);
+  }
 });
 
 const reader = require('readline').createInterface({
@@ -41,7 +52,7 @@ reader.on('line', function (line) {
     bf.push(parseInt(ln[i]));
   }
   
-  socket.write(new Buffer(bf))
+  socket.write(Buffer.from(bf))
 });
 reader.on('close', function () {
   //do something
