@@ -13,22 +13,29 @@
 #include "config.h"
 #include "packetBits.h"
 
+//Fly Pi v2 制御ソフト
+//https://github.com/yuki-js/FlyPi-control
+//Raspberry Pi Zero Wで動作する。
+
+
 #define EIGHTBIT(x) (uint8_t)((x >255)? 255 : (x < 0)? 0:x)
+//0-255の範囲の8ビット符号なし整数にする
+
 
 int manualMode=0;
-uint8_t armed = 0;
+uint8_t armed = 0;//アーム状態(モータのロック)
 
+//４軸のデータ
 int8_t yaw = 0;
 int8_t pitch =0;
 int8_t roll=0;
-uint8_t thro=0;
-
+uint8_t thro=0;//これだけunsigned
 
 int sock;
 int i2cHandle;
 
-struct setopt_p  setoptData = {0,100};
-struct setparam_p setparamData = {1,1,1,0,0,0,1,1,1,1,{0,0,0,0,0,0,0,0},20};
+struct setopt_p  setoptData = {0,100,0,0};//センサー切、レポートレート１秒、PWM周波数0
+struct setparam_p setparamData = {1,1,1,0,0,0,1,1,1,1,{0,0,0,0,0,0,0,0},20};//PID定数=1,xyz補正:0,軸補正なし(1倍),モータ補正:0,センサーを平均する回数:20
 
 //sensor utils
 
@@ -62,19 +69,19 @@ int initI2c(){
   printf("i2c init ok\n");
   return 0;
 }
-
+//https://github.com/emersion/node-i2c-mpu6050を参考にした
 
 uint16_t readWord(int cmd){
   uint8_t high=i2cReadByteData(i2cHandle,cmd);
   uint8_t low=i2cReadByteData(i2cHandle,cmd+1);
-  return (high << 8) + low;
+  return (high << 8) + low;//上位ビット、下位ビットを結合させる
 }
 
 int16_t readWord2c(int cmd){
   uint16_t value = readWord(cmd);
 
   if (value >= 0x8000) {
-		return -((65535 - value) + 1);
+		return -((65535 - value) + 1);//補数
 	} else {
 		return value;
 	}
@@ -89,23 +96,23 @@ void readSensor(float* ret){
   ret[5]=((float)readWord2c(GYRO_ZOUT)/GYRO_LSB_SENSITIVITY);
 }
 void averageSensor(float* ret,int16_t samples){
-  float temp[3]={0,0,0};
+  float temp[6]={0,0,0,0,0,0};
   for(uint8_t resetInd=0;resetInd<6;resetInd++){
-    ret[resetInd]=0;
+    ret[resetInd]=0;//ゼロセット
   }
   for(int16_t smpInd=0;smpInd<samples;smpInd++){
     readSensor(temp);
-    if(temp[0]==0.0&&temp[1]==0.0&&temp[2]==0.0){
+    if(temp[0]==0.0&&temp[1]==0.0&&temp[2]==0.0){//値がゼロになることを軽減するため
       smpInd--;
       continue;
     }
     for(uint8_t setInd=0;setInd<6;setInd++){
-      ret[setInd]+=temp[setInd]/(float)samples;
+      ret[setInd]+=temp[setInd]/(float)samples;//平均の足し合わせ
     }
   }
 }
 float acc2radX(const float* in){
-  return -atan2(in[1],sqrt(in[0]*in[0]+in[2]*in[2]));
+  return -atan2(in[1],sqrt(in[0]*in[0]+in[2]*in[2]));//センサー値を角度に変換
 }
 float acc2radY(const float* in){
   return -atan2(in[2],sqrt(in[1]*in[1]+in[0]*in[0]));
@@ -124,7 +131,7 @@ int initSocket(){
   }
   struct sockaddr_in sa = {0};
   sa.sin_family = AF_INET;
-  sa.sin_port=htons(33400);
+  sa.sin_port=htons(33400);//デフォルトポートは33400
   sa.sin_addr.s_addr=INADDR_ANY;
   
   if (bind(sock,(const struct sockaddr*) &sa,sizeof(struct sockaddr_in))==-1) {
@@ -139,12 +146,13 @@ int initSocket(){
 }
 int cli;
 
-void* server(){
+void* server(){//主にデータを受診するスレッド
   int msgLen;
   uint8_t temp;
  
   int8_t normalData[4];
   uint8_t manualData[MOTOR_LENGTH];
+  char shellStr[96];
 
 
   while(1){
@@ -158,16 +166,16 @@ void* server(){
     puts("Accepted new client");
 
     while(1){
-      if(recv(cli,&temp,sizeof(uint8_t),0)<1){
+      if(recv(cli,&temp,sizeof(uint8_t),0)<1){//先頭1バイトを読み込み、分岐
         perror("disconnected or error");
         break;
       }
       switch(temp){
-      case PB1_NOOP:
+      case PB1_NOOP://データなし
         break;
       case PB1_NORMAL:
         
-        recv(cli,&normalData,sizeof(int8_t)*4,0);
+        recv(cli,&normalData,sizeof(int8_t)*4,0);//4byte
         yaw=(int8_t)normalData[0];
         pitch=(int8_t)normalData[1];
         roll=(int8_t)normalData[2];
@@ -177,7 +185,7 @@ void* server(){
         break;
       case PB1_MANUAL:
         
-        recv(cli,&manualData,sizeof(uint8_t)*MOTOR_LENGTH,0);
+        recv(cli,&manualData,sizeof(uint8_t)*MOTOR_LENGTH,0);//MOTOR_LENGTH(8バイト)
         for(int i=0;i<MOTOR_LENGTH;i++){
           motorList[i].value=manualData[i];
         }
@@ -185,11 +193,11 @@ void* server(){
         break;
 
       case PB1_QUIT:
-        cleanSock();
+        cleanSock();//データなし
         cleanGPIO();
         exit(0);
         break;
-      case PB1_SETOPT:
+      case PB1_SETOPT://struct setopt_pぶん
         recv(cli,&setoptData,sizeof(struct setopt_p),0);
 
         for(int i=0;i<MOTOR_LENGTH;i++){
@@ -197,22 +205,22 @@ void* server(){
         }
         
         break;
-      case PB1_SETPARAM:
+      case PB1_SETPARAM://struct setparam_p分
         recv(cli,&setparamData,sizeof(struct setparam_p),0);
         break;
-      case PB1_REQUEST_MOTORS:
+      case PB1_REQUEST_MOTORS://データなし
         send(cli,&motorList,sizeof(struct motorConfig)*MOTOR_LENGTH,0);
         break;
-      case PB1_ARM:
+      case PB1_ARM://データなし
         armed=1;
         break;
-      case PB1_DISARM:
+      case PB1_DISARM://データなし
         armed=0;
         break;
-      case PB1_SHELL:
-        char shellStr[127];
-        recv(cli,&shellStr,sizeof(char)*127,0);
-        system(shellStr)
+      case PB1_SHELL://最大96バイトの呼び出したいコマンド
+        
+        recv(cli,&shellStr,sizeof(char)*96,0);
+        system(shellStr);
       }
     }
   }
@@ -226,7 +234,7 @@ int cleanSock(){
 
 
 float curSensorVal[6] = {0,0,0,0,0,0};
-void* sense(){
+void* sense(){//センサー値を読み取るスレッド
   while(1){
     if(setoptData.sensorEnabled){
       averageSensor(curSensorVal,setparamData.accelSamples);
@@ -242,16 +250,16 @@ void* sense(){
 
 float ex=0,ey=0,dex=0,dey=0,lx=0,ly=0,pex=0,pey=0,iex=0,iey=0,x=0,y=0;
 
-void* control(){
+void* control(){//出力を決めるスレッド
   while(1){
     /*
-      -128<pitch<127
-      -pi<acc2rad<pi
+      pitchの値の範囲は -128<pitch<127
+      acc2rad()の範囲は -pi<acc2rad()<pi
 
-      最大でもpi/6 rad までの傾きにしたい
+      最大でpi/6 rad までの傾きにしたい
       すなわちpitch=127 がpi/6 radになる
     */
-    if(setoptData.sensorEnabled){
+    if(setoptData.sensorEnabled){//PID制御
       float xRef=(float)pitch*3.14/6/127*setparamData.pitchScale;
       float yRef=(float)roll*3.14/6/127*setparamData.rollScale;
       
@@ -278,28 +286,28 @@ void* control(){
     }
     for(int i=0;i<MOTOR_LENGTH;i++){
       if(setoptData.sensorEnabled){
-        if(((uint8_t)(motorList[i].type&0b00000001)) == 0){//X
-          if(((uint8_t)(motorList[i].type&0b00000010)) == 0){//P
+        if(((uint8_t)(motorList[i].type&M_Y)) == 0){//モータの種類がYでない=>Xならば
+          if(((uint8_t)(motorList[i].type&M_N)) == 0){//Nでない=>Pならば
             motorList[i].value=EIGHTBIT(x+thro*setparamData.throScale);
           }else{
             motorList[i].value=EIGHTBIT(-x+thro*setparamData.throScale);
           }
         }else{
-          if(((uint8_t)(motorList[i].type&0b00000010)) == 0){//P
+          if(((uint8_t)(motorList[i].type&M_N)) == 0){//P
             motorList[i].value=EIGHTBIT(y+thro*setparamData.throScale);
           }else{
             motorList[i].value=EIGHTBIT(-y+thro*setparamData.throScale);
           }
         }
 
-        if(motorList[i].type&0b00000100 == 0){//L
+        if((uint8_t)(motorList[i].type&M_CCW) == 0){//時計回りならば
           motorList[i].value=EIGHTBIT(motorList[i].value+yaw*setparamData.yawScale);
         }else{
           motorList[i].value=EIGHTBIT(motorList[i].value-yaw*setparamData.yawScale);
         }
         
       }
-      if(armed){
+      if(armed){//ロックがかかっていなければ
         gpioPWM(motorList[i].pin,EIGHTBIT(motorList[i].value));
       }
       
@@ -310,7 +318,7 @@ void* control(){
 
 struct sendStat_o sendData;
 
-void* sendStat(){
+void* sendStat(){//コントローラに状態を通知するスレッド
   while(1){
     if(setoptData.sendInterval>0){
       sendData.accX=curSensorVal[0];
@@ -397,7 +405,7 @@ int main(int argc,char* argv[]){
   }
   printf("sizeof: setparam_p=%d setopt_p=%d sendStat_o=%d float=%d double=%d uint8_t=%d motorConfig=%d\n",
          sizeof(struct setparam_p),sizeof(struct setopt_p),sizeof(struct sendStat_o),sizeof(float),sizeof(double),sizeof(uint8_t),sizeof(struct motorConfig));
-  while(1){
+  while(1){//メインスレッドは何もしません
     /*
       printf("control:%d %d %d %d\n",yaw,pitch,roll,thro);
     printf("raw:");
@@ -405,6 +413,7 @@ int main(int argc,char* argv[]){
       printf("%d ",motorList[i].value);
     }
     printf("\naccel:%f %f\n",acc2radX(curSensorVal),acc2radY(curSensorVal));
+    よくデバッグに使ってた
     */
     sleep(2);
   }
