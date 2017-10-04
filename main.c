@@ -34,7 +34,7 @@ uint8_t thro=0;//これだけunsigned
 int sock;
 int i2cHandle;
 
-struct setopt_p  setoptData = {0,100,0,0};//センサー切、レポートレート１秒、PWM周波数0
+struct setopt_p  setoptData = {0,100,0};//センサー切、レポートレート１秒、PWM周波数0
 struct setparam_p setparamData = {1,1,1,0,0,0,1,1,1,1,{0,0,0,0,0,0,0,0},20};//PID定数=1,xyz補正:0,軸補正なし(1倍),モータ補正:0,センサーを平均する回数:20
 
 //sensor utils
@@ -225,7 +225,6 @@ void* server(){//主にデータを受診するスレッド
     }
   }
   cleanSock();
-  return;
 }
 int cleanSock(){
   close(sock);
