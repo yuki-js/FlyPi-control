@@ -11,6 +11,8 @@
 #define M_CW 0b00000000//時計回り
 #define M_CCW 0b00000100//反時計回り
 
+#define LISTEN_PORT 33400
+#define LISTEN_UDS "/tmp/flypi-socket"
 
 struct motorConfig {
   uint8_t pin;//BCM番号。WiringPiや、物理ピンの番号ではない
