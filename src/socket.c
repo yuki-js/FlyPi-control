@@ -19,7 +19,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "config.h"
 #include "packetBits.h"
 #include "socket.h"
-#include "control.h"
+#include "sensor.h"
 
 int manualMode=0;
 uint8_t armed = 0;
@@ -41,12 +41,12 @@ int initSocket(){
   
 #ifdef LISTEN_UDS
   struct sockaddr_un sa = {0};
-  sa.sin_family = AF_UNIX;
+  sa.sun_family = AF_UNIX;
   strcpy(sa.sun_path, LISTEN_UDS);
 
   remove(sa.sun_path);
   
-  if (bind(sock,(const struct sockaddr*) &sa,sizeof(struct sockaddr_in))==-1) {
+  if (bind(sock,(const struct sockaddr*) &sa,sizeof(struct sockaddr_un))==-1) {
     perror("socket bind error");
     return cleanSock();
   }

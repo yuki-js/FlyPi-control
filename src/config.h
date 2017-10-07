@@ -10,9 +10,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #define _CONFIG_H_
 
-#include "packetBits.h"
-
 #define MOTOR_LENGTH 8 
+#include "packetBits.h"
 
 #define M_X 0b00000000//センサX軸が正の時
 #define M_Y 0b00000001//負の時
