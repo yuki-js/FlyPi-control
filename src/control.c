@@ -55,7 +55,8 @@ int initGPIO(){
 #define KI setparamData.ki
 #define KD setparamData.kd
 static float ex=0,ey=0,dex=0,dey=0,lx=0,ly=0,pex=0,pey=0,iex=0,iey=0,x=0,y=0;
-static timespec* prevTime,nowTime;
+static timespec* prevTime;
+static timespec* nowTime;
 
 void* control(){//出力を決めるスレッド
   while(1){
