@@ -8,7 +8,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 #include <pigpio.h>
 
-#include "gpio.h"
+#include "control.h"
 #include "config.h"
 
 int8_t yaw = 0;
