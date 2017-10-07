@@ -17,8 +17,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define EIGHTBIT(x) (uint8_t)((x >255)? 255 : (x < 0)? 0:x)//0-255の範囲の8ビット符号なし整数にする
 
 
-#include "config.h"
 #include "packetBits.h"
+#include "config.h"
 #include "sensor.h"
 #include "socket.h"
 #include "control.h"

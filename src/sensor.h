@@ -19,7 +19,7 @@ extern float curSensorVal[6];
 int cleanI2c();
 int initI2c();
 uint16_t readWord(int cmd);
-uint8_t readWord2c(int cmd);
+int8_t readWord2c(int cmd);
 void readSensor(float* ret);
 void averageSensor(float* ret,int16_t samples);
 float acc2radX(const float* in);
