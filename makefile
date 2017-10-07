@@ -26,7 +26,11 @@ control.o: src/control.c
 socket.o: src/socket.c
 	$(CC) $(CFLAGS) -c $<
 
-main.c : src/config.h
+config.o: src/config.c
+	$(CC) $(CFLAGS) -c $<
+
+
+config.c : src/config.h
 main.c : src/packetBits.h
 
 
