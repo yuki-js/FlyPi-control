@@ -84,9 +84,9 @@ void* control(){//出力を決めるスレッド
       clock_gettime(CLOCK_REALTIME, nowTime);//すべてのループは一秒未満間隔であるとする。そのほうがプログラムの見通しが良くなると思って（言い訳）
       double dt;//時間デルタ[sec]
       if(nowTime->tv_nsec < prevTime->tv_nsec){
-        dt=(nowTime.tv_nsec + 1000000000 - prevTime.tv_nsec)/1000000000;//くりあがり
+        dt=(nowTime->tv_nsec + 1000000000 - prevTime->tv_nsec)/1000000000;//くりあがり
       }else{
-        dt=(nowTime.tv_nsec - prevTime.tv_nsec)/1000000000;
+        dt=(nowTime->tv_nsec - prevTime->tv_nsec)/1000000000;
       }
       prevTime = nowTime;
       
