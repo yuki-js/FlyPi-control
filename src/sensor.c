@@ -60,22 +60,6 @@ void readSensor(float* ret){
   ret[4]=((float)readWord2c(GYRO_YOUT)/GYRO_LSB_SENSITIVITY);
   ret[5]=((float)readWord2c(GYRO_ZOUT)/GYRO_LSB_SENSITIVITY);
 }
-void averageSensor(float* ret,int16_t samples){
-  float temp[6]={0,0,0,0,0,0};
-  for(uint8_t resetInd=0;resetInd<6;resetInd++){
-    ret[resetInd]=0;//ゼロセット
-  }
-  for(int16_t smpInd=0;smpInd<samples;smpInd++){
-    readSensor(temp);
-    if(temp[0]==0.0&&temp[1]==0.0&&temp[2]==0.0){//値がゼロになることを軽減するため
-      smpInd--;
-      continue;
-    }
-    for(uint8_t setInd=0;setInd<6;setInd++){
-      ret[setInd]+=temp[setInd]/(float)samples;//平均の足し合わせ
-    }
-  }
-}
 float acc2radX(const float* in){
   return -atan2(in[1],sqrt(in[0]*in[0]+in[2]*in[2]));//センサー値を角度に変換
 }
@@ -88,7 +72,7 @@ float acc2radY(const float* in){
 void* sense(){//センサー値を読み取るスレッド
   while(1){
     if(setoptData.sensorEnabled){
-      averageSensor(curSensorVal,setparamData.accelSamples);
+      readSensor(curSensorVal);
     }
   }
 }
