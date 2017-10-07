@@ -2,7 +2,7 @@
 
 # Program filename and object files
 PROGRAM = flypi
-OBJS = main.o sensor.o control.o socket.o
+OBJS = main.o sensor.o control.o socket.o config.o
 LIBS = -lpigpio -lrt -lm
 
 CC = gcc
