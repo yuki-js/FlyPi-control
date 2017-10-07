@@ -9,10 +9,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef _GPIO_H_
 #define _GPIO_H_
 
-
-
-extern float ex,ey,dex,dey,lx,ly,pex,pey,iex,iey,x,y;
-
 //４軸のデータ
 extern int8_t yaw;
 extern int8_t pitch;
