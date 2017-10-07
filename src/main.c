@@ -8,7 +8,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  */
-
+#include <unistd.h>
 #include <stdio.h>
 #include <pigpio.h>
 #include <math.h>
@@ -38,10 +38,10 @@ int main(int argc,char* argv[]){
     return -1;
   }
   
-  pthread_t commThread;
-  pthread_t ctrlThread;
-  pthread_t senseThread;
-  pthread_t sendThread;
+  pthread_t* commThread;
+  pthread_t* ctrlThread;
+  pthread_t* senseThread;
+  pthread_t* sendThread;
   
   commThread = gpioStartThread(socketThread,NULL);
   ctrlThread = gpioStartThread(control,NULL);
