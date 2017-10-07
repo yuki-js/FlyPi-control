@@ -10,15 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <string.h>
-#include <pthread.h>
 #include <pigpio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <math.h>
 
 
@@ -50,15 +42,15 @@ int main(int argc,char* argv[]){
   pthread_t ctrlThread;
   pthread_t senseThread;
   pthread_t sendThread;
-  if(pthread_create(&commThread,NULL,socketThread,NULL)<0
-     ||pthread_create(&ctrlThread,NULL,control,NULL)<0
-     ||pthread_create(&senseThread,NULL,sense,NULL)<0
-     ||pthread_create(&sendThread,NULL,sendStat,NULL)<0){
-    perror("failed to create thread\n");
-    return 1;
-  }
+  
+  commThread = gpioStartThread(socketThread);
+  ctrlThread = gpioStartThread(control);
+  senseThread = gpioStartThread(sense);
+  sendThread = gpioStartThread(sendStat);
+  
   printf("sizeof: setparam_p=%d setopt_p=%d sendStat_o=%d float=%d double=%d uint8_t=%d motorConfig=%d\n",
          sizeof(struct setparam_p),sizeof(struct setopt_p),sizeof(struct sendStat_o),sizeof(float),sizeof(double),sizeof(uint8_t),sizeof(struct motorConfig));
+  
   while(1){//メインスレッドは何もしません
     
     sleep(2);
