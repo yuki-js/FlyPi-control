@@ -6,7 +6,7 @@ OBJS = main.o sensor.o control.o socket.o
 LIBS = -lpigpio -lrt -lm
 
 CC = gcc
-CFLAGS = -Wall -O1
+CFLAGS = -Wall -O1 $(LIBS)
 
 .PHONY: all
 all: $(PROGRAM)
