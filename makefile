@@ -12,7 +12,7 @@ CFLAGS = -Wall -O1
 all: $(PROGRAM)
 
 $(PROGRAM): $(OBJS)
-	$(CC) -o $(PROGRAM) $^
+	$(CC) $(CFLAGS) -o $(PROGRAM) $^
 
 main.o: src/main.c
 	$(CC) $(CFLAGS) -c $<
