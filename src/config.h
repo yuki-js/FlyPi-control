@@ -21,7 +21,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define M_CCW 0b00000100//反時計回り
 
 #define LISTEN_PORT 33400
-#define LISTEN_UDS "/tmp/flypi-socket"
+//#define LISTEN_UDS "/tmp/flypi-socket"
 
 struct motorConfig {
   uint8_t pin;//BCM番号。WiringPiや、物理ピンの番号ではない
