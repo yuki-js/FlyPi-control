@@ -88,7 +88,7 @@ void* control(){//出力を決めるスレッド
       }else{
         dt=(nowTime.tv_nsec - prevTime.tv_nsec)/1000000000;
       }
-      prevTime = &nowTime;
+      prevTime = nowTime;
       
       lx=ex;
       ly=ey;
