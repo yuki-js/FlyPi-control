@@ -26,5 +26,4 @@ float acc2radX(const float* in);
 float acc2radY(const float* in);
 void* sense();
 
-
 #endif

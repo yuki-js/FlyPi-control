@@ -67,8 +67,6 @@ float acc2radY(const float* in){
   return -atan2(in[2],sqrt(in[1]*in[1]+in[0]*in[0]));
 }
 
-
-
 void* sense(){//センサー値を読み取るスレッド
   while(1){
     if(setoptData.sensorEnabled){

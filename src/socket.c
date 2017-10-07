@@ -31,7 +31,7 @@ uint8_t armed = 0;
 int cli=0;
 
 struct setopt_p setoptData = {0,100,0};//センサー切、レポートレート１秒、PWM周波数0
-struct setparam_p setparamData = {1,1,1,0,0,0,1,1,1,1,{0,0,0,0,0,0,0,0},20};//PID定数=1,xyz補正:0,軸補正なし(1倍),モータ補正:0,センサーを平均する回数:20
+struct setparam_p setparamData = {1,1,1,0,0,0,1,1,1,1,{0,0,0,0,0,0,0,0}};//PID定数=1,xyz補正:0,軸補正なし(1倍),モータ補正:なし
 
 int cleanSock(){
   close(sock);
@@ -56,7 +56,7 @@ int initSocket(){
     perror("socket bind error");
     return cleanSock();
   }else{
-    printf("Binded %s",sa.sun_path);
+    printf("Binded %s\n",sa.sun_path);
   }
 #else
   struct sockaddr_in sa = {0};
@@ -68,7 +68,7 @@ int initSocket(){
     perror("socket bind error");
     return cleanSock();
   }else{
-    printf("Binded port %d",+LISTEN_PORT);
+    printf("Binded port %d\n",+LISTEN_PORT);
   }
 #endif
 

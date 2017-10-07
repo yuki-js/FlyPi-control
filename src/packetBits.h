@@ -38,15 +38,13 @@ struct setparam_p{
   float pitchScale;
   float rollScale;
   float throScale;
-  float motorCal[MOTOR_LENGTH];//モータ補正ち
-  uint8_t accelSamples;//センサ平均のサンプル数
+  float motorCal[MOTOR_LENGTH];//モータ補正
 };
 
 #define PB1_MANUAL 5//モータ値を直接指定
 #define PB1_REQUEST_MOTORS 6//モーターの名前、設定値の定数などを返す
 #define PB1_ARM 7//アーム　これを送信しなければ回らない
 #define PB1_DISARM 8//ディスアーム
-#define PB1_SHELL 9//shellコマンド
 
 struct sendStat_o {
   float accX;
