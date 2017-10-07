@@ -36,16 +36,10 @@ int initGPIO(){
   int motIt;
   for(motIt=0;motIt<MOTOR_LENGTH;motIt++){
     if(gpioSetMode(motorList[motIt].pin, PI_OUTPUT)!=0){
-      printf("failed to set motor %s\n",motorList[motIt].name);
       return cleanGPIO();
-    }else{
-      printf("Successfully set motor %s\n",motorList[motIt].name);
     }
     if(gpioPWM(motorList[motIt].pin,0)!=0){
-      printf("failed to init motor %s\n",motorList[motIt].name);
       return cleanGPIO();
-    }else{
-      printf("Successfully initialized motor %s\n",motorList[motIt].name);
     }
   }
   return 0;

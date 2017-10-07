@@ -31,7 +31,7 @@ int initI2c(){
   if(i2cWriteByteData(i2cHandle,POWER_MGMT_1,0)<0){
     return cleanI2c();
   }
-  printf("i2c init ok\n");
+  printf("Initialized I2C\n");
   return 0;
 }
 //https://github.com/emersion/node-i2c-mpu6050を参考にした

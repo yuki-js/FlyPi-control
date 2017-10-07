@@ -41,20 +41,22 @@ int cleanSock(){
 int initSocket(){
   sock = socket(AF_INET,SOCK_STREAM,0);
   if (sock == -1) {
-    perror("could not open socket");
+    perror("Could not open socket");
     return -1;
   }
   
 #ifdef LISTEN_UDS
   struct sockaddr_un sa = {0};
   sa.sun_family = AF_UNIX;
-  strcpy(sa.sun_path, LISTEN_UDS);
+  sa.sun_path=LISTEN_UDS;
 
   remove(sa.sun_path);
   
   if (bind(sock,(const struct sockaddr*) &sa,sizeof(struct sockaddr_un))==-1) {
     perror("socket bind error");
     return cleanSock();
+  }else{
+    printf("Binded %s",sa.sun_path);
   }
 #else
   struct sockaddr_in sa = {0};
@@ -65,6 +67,8 @@ int initSocket(){
   if (bind(sock,(const struct sockaddr*) &sa,sizeof(struct sockaddr_in))<0) {
     perror("socket bind error");
     return cleanSock();
+  }else{
+    printf("Binded port %d",+LISTEN_PORT);
   }
 #endif
 
@@ -144,7 +148,6 @@ void* socketThread(){//主にデータを受信するスレッド
       case PB1_DISARM://データなし
         armed=0;
         break;
-        //shellは使い勝手がわるいのとバグの温床になると思ったので廃止
       }
     }
     cleanSock();

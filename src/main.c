@@ -34,7 +34,7 @@ int main(int argc,char* argv[]){
     return -1;
   }
   
-  gpioStartThread(socketThread,NULL);
+  gpioStartThread(socketThread,NULL);//これは内部でmallocを呼び出してるのでRTOS移植時には気をつけて
   gpioStartThread(control,NULL);
   gpioStartThread(sense,NULL);
   gpioStartThread(sendStat,NULL);
