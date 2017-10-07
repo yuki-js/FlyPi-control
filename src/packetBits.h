@@ -9,6 +9,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef _PACKETBITS_H_
 
 #define _PACKETBITS_H_
+
+#include "config.h"
+
 //PB1_<role>
 
 #define PB1_NOOP 0 //無視
