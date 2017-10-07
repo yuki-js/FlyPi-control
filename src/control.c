@@ -55,8 +55,8 @@ int initGPIO(){
 #define KI setparamData.ki
 #define KD setparamData.kd
 static float ex=0,ey=0,dex=0,dey=0,lx=0,ly=0,pex=0,pey=0,iex=0,iey=0,x=0,y=0;
-static timespec* prevTime;
-static timespec* nowTime;
+static timespec prevTime;
+static timespec nowTime;
 
 void* control(){//出力を決めるスレッド
   while(1){
@@ -80,12 +80,12 @@ void* control(){//出力を決めるスレッド
       dex=ex-lx;//偏差デルタ
       dey=ey-ly;
 
-      clock_gettime(CLOCK_REALTIME, nowTime);//すべてのループは一秒未満間隔であるとする。そのほうがプログラムの見通しが良くなると思って（言い訳）
+      clock_gettime(CLOCK_REALTIME, &nowTime);//すべてのループは一秒未満間隔であるとする。そのほうがプログラムの見通しが良くなると思って（言い訳）
       double dt;//時間デルタ[sec]
-      if(nowTime->tv_nsec < prevTime->tv_nsec){
-        dt=(nowTime->tv_nsec + 1000000000 - prevTime->tv_nsec)/1000000000;//くりあがり
+      if(nowTime.tv_nsec < prevTime.tv_nsec){
+        dt=(nowTime.tv_nsec + 1000000000 - prevTime.tv_nsec)/1000000000;//くりあがり
       }else{
-        dt=(nowTime->tv_nsec - prevTime->tv_nsec)/1000000000;
+        dt=(nowTime.tv_nsec - prevTime.tv_nsec)/1000000000;
       }
       prevTime = nowTime;
       
