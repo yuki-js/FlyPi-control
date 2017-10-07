@@ -15,6 +15,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "packetBits.h"
 #include "config.h"
+#include "sensor.h"
+#include "socket.h"
+#include "control.h"
+
 
 int main(int argc,char* argv[]){
   if(initGPIO()!=0){
@@ -30,15 +34,10 @@ int main(int argc,char* argv[]){
     return -1;
   }
   
-  pthread_t* commThread;
-  pthread_t* ctrlThread;
-  pthread_t* senseThread;
-  pthread_t* sendThread;
-  
-  commThread = gpioStartThread(socketThread,NULL);
-  ctrlThread = gpioStartThread(control,NULL);
-  senseThread = gpioStartThread(sense,NULL);
-  sendThread = gpioStartThread(sendStat,NULL);
+  gpioStartThread(socketThread,NULL);
+  gpioStartThread(control,NULL);
+  gpioStartThread(sense,NULL);
+  gpioStartThread(sendStat,NULL);
   
   printf("sizeof: setparam_p=%d setopt_p=%d sendStat_o=%d float=%d double=%d uint8_t=%d motorConfig=%d\n",
          sizeof(struct setparam_p),sizeof(struct setopt_p),sizeof(struct sendStat_o),sizeof(float),sizeof(double),sizeof(uint8_t),sizeof(struct motorConfig));

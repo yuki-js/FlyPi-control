@@ -13,7 +13,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <math.h>
 #include "socket.h"
 #include "sensor.h"
+
 float curSensorVal[6] = {0,0,0,0,0,0};
+int i2cHandle = -1;
 
 int cleanI2c(){
   i2cClose(i2cHandle);

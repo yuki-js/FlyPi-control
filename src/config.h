@@ -29,16 +29,7 @@ struct motorConfig {
   int8_t type;
   uint8_t value;//制御時に使うので、0を必ずセット
 };
-struct motorConfig motorList[MOTOR_LENGTH]={
-  {24,"FL1",M_X|M_P|M_CW,0},
-  {23,"FL2",M_Y|M_P|M_CCW,0},
-  {15,"FR1",M_X|M_N|M_CW,0},
-  {18,"FR2",M_Y|M_P|M_CCW,0},
-  {10,"BL1",M_X|M_P|M_CW,0},
-  {22,"BL2",M_Y|M_N|M_CCW,0},
-  {17,"BR1",M_X|M_N|M_CW,0},
-  {27,"BR2",M_Y|M_N|M_CCW,0}
-};
+extern struct motorConfig motorList[MOTOR_LENGTH];
 
 
 #endif // _CONFIG_H_
