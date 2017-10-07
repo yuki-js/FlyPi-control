@@ -10,11 +10,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/un.h>
 #include <pigpio.h>
 #include <stdlib.h>
+
+#ifdef LISTEN_UDS
+#include <sys/un.h>
+#else
+#include <arpa/inet.h>
+#endif
 
 #include "config.h"
 #include "packetBits.h"
@@ -176,5 +180,4 @@ void* sendStat(){//コントローラに状態を通知するスレッド
       sleep(1);
     }
   }
-  return;
 }
