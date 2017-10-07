@@ -12,6 +12,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 _#include <pigpio.h>
 #include "i2c.h"
 
+float curSensorVal[6] = {0,0,0,0,0,0};
+
 int cleanI2c(){
   i2cClose(i2cHandle);
   printf("i2c failed");

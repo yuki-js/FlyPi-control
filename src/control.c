@@ -11,6 +11,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "gpio.h"
 #include "config.h"
 
+int8_t yaw = 0;
+int8_t pitch =0;
+int8_t roll=0;
+uint8_t thro=0;//これだけunsigned
+
 int cleanGPIO(){
   gpioTerminate();
   

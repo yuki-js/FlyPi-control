@@ -14,7 +14,7 @@
 #define POWER_MGMT_1 0x6B
 
 extern int i2cHandle;
-extern float curSensorVal[6] = {0,0,0,0,0,0};
+extern float curSensorVal[6];
 
 int cleanI2c();
 int initI2c();

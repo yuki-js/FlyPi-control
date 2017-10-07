@@ -16,10 +16,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 float ex=0,ey=0,dex=0,dey=0,lx=0,ly=0,pex=0,pey=0,iex=0,iey=0,x=0,y=0;
 
 //４軸のデータ
-extern int8_t yaw = 0;
-extern int8_t pitch =0;
-extern int8_t roll=0;
-extern uint8_t thro=0;//これだけunsigned
+extern int8_t yaw;
+extern int8_t pitch;
+extern int8_t roll;
+extern uint8_t thro;//これだけunsigned
 
 int initGPIO();
 int cleanGPIO();
