@@ -10,6 +10,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef _SOCKET_H_
 #define _SOCKET_H_
 
+#include <stdint.h>
+
 #include "packetBits.h"
 
 int sock;

@@ -13,10 +13,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <pigpio.h>
 #include <math.h>
 
-
-#define EIGHTBIT(x) (uint8_t)((x >255)? 255 : (x < 0)? 0:x)//0-255の範囲の8ビット符号なし整数にする
-
-
 #include "packetBits.h"
 #include "config.h"
 #include "sensor.h"

@@ -6,10 +6,20 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <pigpio.h>
+#include <stdlib.h>
 
-#include "socket.h"
 #include "config.h"
 #include "packetBits.h"
+#include "socket.h"
+#include "control.h"
 
 int manualMode=0;
 uint8_t armed = 0;
@@ -60,7 +70,6 @@ int initSocket(){
 }
 
 void* socketThread(){//主にデータを受信するスレッド
-  int msgLen;
   uint8_t temp;
  
   int8_t normalData[4];
