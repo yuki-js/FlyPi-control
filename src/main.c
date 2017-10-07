@@ -15,10 +15,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "packetBits.h"
 #include "config.h"
-#include "sensor.h"
-#include "socket.h"
-#include "control.h"
-
 
 int main(int argc,char* argv[]){
   if(initGPIO()!=0){
