@@ -88,9 +88,9 @@ void lpf(const float* in,float* out,float ratio){
   out[1]=(ratio*in[1] + (1.0-ratio)*prev[1]);
   out[2]=(ratio*in[2] + (1.0-ratio)*prev[2]);
 
-  prev[0]=in[0];
-  prev[1]=in[1];
-  prev[2]=in[2];
+  prev[0]=out[0];
+  prev[1]=out[1];
+  prev[2]=out[2];
   
 }
 
