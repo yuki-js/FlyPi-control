@@ -37,7 +37,7 @@ int initI2c(){
   i2cWriteByteData(i2cHandle,MPU6050_SMPLRT_DIV,0x00);// sample rate: 8kHz/(7+1) = 1kHz
   i2cWriteByteData(i2cHandle,MPU6050_CONFIG,0x00);// disable DLPF, gyro output rate = 8kHz
   i2cWriteByteData(i2cHandle,MPU6050_GYRO_CONFIG,0x08); // gyro range: +/- 500dps
-  i2cWriteByteData(i2cHandle,MPU6050_ACCEL_CONFIG,0x02);// accel range: +/- 8g
+  i2cWriteByteData(i2cHandle,MPU6050_ACCEL_CONFIG,0x03);// accel range: +/- 16g
   i2cWriteByteData(i2cHandle,MPU6050_PWR_MGMT_1,0x01);// disable sleep mode, PLL with X gyro
   
   printf("Initialized I2C\n");
