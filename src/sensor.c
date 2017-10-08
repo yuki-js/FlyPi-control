@@ -81,7 +81,7 @@ void complementary(const float* in,float* out,float ratio){
   out[2]=(ratio*in[4] + (1.0-ratio)*in[5]);
 }
 
-void lpf(const float* in,float* out){
+void lpf(float* in,float* out,float ratio){
   static float* prev;
   
   out[0]=(ratio*in[0] + (1.0-ratio)*prev[0]);
@@ -95,7 +95,7 @@ void* sense(){//センサー値を読み取るスレッド
   while(1){
     if(setoptData.sensorEnabled){
       readSensor(curSensorVal);
-      lpf(curSensorVal,curSensorVal)
+      lpf(curSensorVal,curSensorVal,0.5);
     }
   }
 }
