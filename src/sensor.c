@@ -81,7 +81,7 @@ void complementary(const float* in,float* out,float ratio){
   out[2]=(ratio*in[4] + (1.0-ratio)*in[5]);
 }
 
-static float prev[3] ={0,0,0};
+static float* prev ={0,0,0};
 void lpf(float* in,float* out,float ratio){
   
   out[0]=(ratio*in[0] + (1.0-ratio)*prev[0]);
