@@ -8,10 +8,17 @@
 #define GYRO_XOUT 0x43
 #define GYRO_YOUT 0x45
 #define GYRO_ZOUT 0x47
+
 #define ACCEL_LSB_SENSITIVITY (float)16384.0
 #define GYRO_LSB_SENSITIVITY (float)16384.0
-#define I2C_ADDR 0x68
-#define POWER_MGMT_1 0x6B
+
+#define MPU6050_ADDR         0x68 // MPU-6050 device address
+#define MPU6050_SMPLRT_DIV   0x19 // MPU-6050 register address
+#define MPU6050_CONFIG       0x1a
+#define MPU6050_GYRO_CONFIG  0x1b
+#define MPU6050_ACCEL_CONFIG 0x1c
+#define MPU6050_WHO_AM_I     0x75
+#define MPU6050_PWR_MGMT_1   0x6b
 
 extern int i2cHandle;
 extern float curSensorVal[6];

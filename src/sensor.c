@@ -24,13 +24,22 @@ int cleanI2c(){
 }
 
 int initI2c(){
-  i2cHandle=i2cOpen(1,I2C_ADDR,0);
+  i2cHandle=i2cOpen(1,MPU6050_ADDR,0);
   if(i2cHandle<0){
     return -1;
   }
-  if(i2cWriteByteData(i2cHandle,POWER_MGMT_1,0)<0){
+  if(i2cWriteByteData(i2cHandle,MPU6050_PWR_MGMT_1,0)<0){
     return cleanI2c();
   }
+  if(i2cReadByteData(i2cHandle,MPU6050_WHO_AM_I)!=MPU6050_ADDR){
+    return cleanI2c();
+  }
+  i2cWriteByteData(i2cHandle,MPU6050_SMPLRT_DIV,0x00);// sample rate: 8kHz/(7+1) = 1kHz
+  i2cWriteByteData(i2cHandle,MPU6050_CONFIG,0x00);// disable DLPF, gyro output rate = 8kHz
+  i2cWriteByteData(i2cHandle,MPU6050_GYRO_CONFIG,0x08); // gyro range: +/- 500dps
+  i2cWriteByteData(i2cHandle,MPU6050_ACCEL_CONFIG,0x02);// accel range: +/- 8g
+  i2cWriteByteData(i2cHandle,MPU6050_PWR_MGMT_1,0x01);// disable sleep mode, PLL with X gyro
+  
   printf("Initialized I2C\n");
   return 0;
 }
