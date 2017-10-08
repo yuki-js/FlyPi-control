@@ -98,7 +98,7 @@ void* sense(){//センサー値を読み取るスレッド
   while(1){
     if(setoptData.sensorEnabled){
       readSensor(curSensorVal);
-      lpf(curSensorVal,curSensorVal,0.5);
+      lpf(curSensorVal,curSensorVal,0.3);
     }
   }
 }
