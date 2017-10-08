@@ -21,7 +21,7 @@
 #define MPU6050_PWR_MGMT_1   0x6b
 
 extern int i2cHandle;
-extern float curSensorVal[6];
+extern float curSensorVal[3];
 
 int cleanI2c();
 int initI2c();
