@@ -84,9 +84,8 @@ void complementary(const float* in,float* out,float ratio){
 void* sense(){//センサー値を読み取るスレッド
   while(1){
     if(setoptData.sensorEnabled){
-      float sensor[6] = {0,0,0,0,0,0};
-      readSensor(sensor);
-      complementary(sensor,curSensorVal,0.18);
+      readSensor(curSensorVal);
+      complementary(curSensorVal,curSensorVal,0.18);
     }
   }
 }
