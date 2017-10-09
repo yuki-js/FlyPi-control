@@ -31,7 +31,7 @@ uint8_t armed = 0;
 int cli=0;
 
 struct setopt_p setoptData = {1,50,1000};//センサー入、レポートレート0.5秒、PWM周波数1000
-struct setparam_p setparamData = {10,2,5,0,0,0,1,1,1,1,{0,0,0,0,0,0,0,0}};//PID定数=10 2 5,xyz補正:0,軸補正なし(1倍),モータ補正:なし
+struct setparam_p setparamData = {10,2,5,0,0,0,0,0,0,1,1,1,1,{0,0,0,0,0,0,0,0}};//PID定数=10 2 5,xyz補正:0,軸補正なし(1倍),モータ補正:なし
 
 int cleanSock(){
   close(sock);
