@@ -14,7 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "socket.h"
 #include "sensor.h"
 
-float curSensorVal[3] = {0,0,0};
+float curSensorVal[6] = {0,0,0,0,0,0};
 int i2cHandle = -1;
 
 int cleanI2c(){
@@ -85,7 +85,7 @@ void* sense(){//センサー値を読み取るスレッド
   while(1){
     if(setoptData.sensorEnabled){
       readSensor(curSensorVal);
-      complementary(curSensorVal,0.05);
+      complementary(curSensorVal,0.1);
     }
   }
 }
