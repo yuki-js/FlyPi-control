@@ -36,6 +36,7 @@ struct setparam_p setparamData = {10,2,5,0,0,0,0,0,0,1,1,1,1,{0,0,0,0,0,0,0,0}};
 
 int cleanSock(){
   close(sock);
+  printf("Socket closed");
   return -1;
 }
 
