@@ -14,7 +14,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "packetBits.h"
 
-int sock;
 extern int cli;
 extern int manualMode;
 extern uint8_t armed;//アーム状態(モータのロック)

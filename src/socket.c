@@ -26,6 +26,7 @@
 #include "sensor.h"
 #include "control.h"
 
+static int sock=NULL;
 int manualMode=0;
 uint8_t armed = 0;
 int cli=0;
