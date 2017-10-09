@@ -85,7 +85,7 @@ void* sense(){//センサー値を読み取るスレッド
   while(1){
     if(setoptData.sensorEnabled){
       readSensor(curSensorVal);
-      complementary(curSensorVal,curSensorVal,0.18);
+      complementary(curSensorVal,curSensorVal,0.1);
     }
   }
 }
