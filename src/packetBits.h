@@ -34,11 +34,15 @@ struct setparam_p{
   float xCal;//センサ補正値
   float yCal;
   float zCal;
+  float xGyroCal;//ジャイロ補正ち
+  float yGyroCal;
+  float zGyroCal;
   float yawScale;//軸スケール
   float pitchScale;
   float rollScale;
   float throScale;
   float motorCal[MOTOR_LENGTH];//モータ補正
+  
 };
 
 #define PB1_MANUAL 5//モータ値を直接指定

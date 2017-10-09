@@ -37,7 +37,7 @@ int initI2c(){
   i2cWriteByteData(i2cHandle,MPU6050_SMPLRT_DIV,0x00);// sample rate: 8kHz/(7+1) = 1kHz
   i2cWriteByteData(i2cHandle,MPU6050_CONFIG,0x00);// disable DLPF, gyro output rate = 8kHz
   i2cWriteByteData(i2cHandle,MPU6050_GYRO_CONFIG,0x08); // gyro range: +/- 500dps
-  i2cWriteByteData(i2cHandle,MPU6050_ACCEL_CONFIG,0x03);// accel range: +/- 16g
+  i2cWriteByteData(i2cHandle,MPU6050_ACCEL_CONFIG,0x01);// accel range: +/- 4g
   i2cWriteByteData(i2cHandle,MPU6050_PWR_MGMT_1,0x01);// disable sleep mode, PLL with X gyro
   
   printf("Initialized I2C\n");
@@ -65,9 +65,9 @@ void readSensor(float* ret){
   ret[0]=((float)readWord2c(ACCEL_XOUT)/ACCEL_LSB_SENSITIVITY)+setparamData.xCal;
   ret[1]=((float)readWord2c(ACCEL_YOUT)/ACCEL_LSB_SENSITIVITY)+setparamData.yCal;
   ret[2]=((float)readWord2c(ACCEL_ZOUT)/ACCEL_LSB_SENSITIVITY)+setparamData.zCal;
-  ret[3]=((float)readWord2c(GYRO_XOUT)/GYRO_LSB_SENSITIVITY);
-  ret[4]=((float)readWord2c(GYRO_YOUT)/GYRO_LSB_SENSITIVITY);
-  ret[5]=((float)readWord2c(GYRO_ZOUT)/GYRO_LSB_SENSITIVITY);
+  ret[3]=((float)readWord2c(GYRO_XOUT)/GYRO_LSB_SENSITIVITY)+setparamData.xGyroCal;
+  ret[4]=((float)readWord2c(GYRO_YOUT)/GYRO_LSB_SENSITIVITY)+setparamData.yGyroCal;
+  ret[5]=((float)readWord2c(GYRO_ZOUT)/GYRO_LSB_SENSITIVITY)+setparamData.zGyroCal;
 }
 float acc2radX(const float* in){
   return -atan2(in[1],sqrt(in[0]*in[0]+in[2]*in[2]));//センサー値を角度に変換
