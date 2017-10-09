@@ -76,9 +76,9 @@ float acc2radY(const float* in){
   return -atan2(in[2],sqrt(in[1]*in[1]+in[0]*in[0]));
 }
 void complementary(const float* in,float* out,float ratio){
-  out[0]=(ratio*in[0] + (1.0-ratio)*in[1]);
-  out[1]=(ratio*in[2] + (1.0-ratio)*in[3]);
-  out[2]=(ratio*in[4] + (1.0-ratio)*in[5]);
+  out[0]=(ratio*in[0] + (1.0-ratio)*in[3]);
+  out[1]=(ratio*in[1] + (1.0-ratio)*in[4]);
+  out[2]=(ratio*in[2] + (1.0-ratio)*in[5]);
 }
 
 void* sense(){//センサー値を読み取るスレッド

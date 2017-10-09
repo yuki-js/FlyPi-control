@@ -4,9 +4,9 @@ Fly Pi v2の制御アプリケーション
 
 # こだわってるところ
 
-* No malloc() (In my code)
-* Less library
-* Less memory
+* malloc()　がない (私が書いたコードの中には)
+* ライブラリを出来るだけ少なく
+* メモリを少なく
 
 # インストール
 
@@ -22,3 +22,9 @@ Copyright (c) 2017 yuki-js
   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+# 貢献
+
+バグなどがありましたらIssuesやPull Requestください。
+プログラムがヘタだとか罵倒してください
