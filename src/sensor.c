@@ -75,7 +75,7 @@ float acc2radX(const float* in){
 float acc2radY(const float* in){
   return -atan2(in[2],sqrt(in[1]*in[1]+in[0]*in[0]));
 }
-void complementary(const float* in,float ratio){
+void complementary(float* in,float ratio){
   in[0]=(ratio*in[0] + (1.0-ratio)*in[3]);
   in[1]=(ratio*in[1] + (1.0-ratio)*in[4]);
   in[2]=(ratio*in[2] + (1.0-ratio)*in[5]);
