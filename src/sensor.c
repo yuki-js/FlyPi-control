@@ -52,12 +52,12 @@ int initI2c(){
 void readSensor(float* ret){
   i2cReadI2CBlockData(i2cHandle,ACCEL_XOUT,i2cSensorBuffer,14);
   
-  ret[0]=(READ_SB(0));
-  ret[1]=(READ_SB(2));
-  ret[2]=(READ_SB(4));
-  ret[3]=(READ_SB(8));
-  ret[4]=(READ_SB(10));
-  ret[5]=(READ_SB(12));
+  ret[0]=(READ_SB(0)/ACCEL_LSB_SENSITIVITY)+setparamData.xCal;
+  ret[1]=(READ_SB(2)/ACCEL_LSB_SENSITIVITY)+setparamData.yCal;
+  ret[2]=(READ_SB(4)/ACCEL_LSB_SENSITIVITY)+setparamData.zCal;
+  ret[3]=(READ_SB(8)/GYRO_LSB_SENSITIVITY)+setparamData.xGyroCal;
+  ret[4]=(READ_SB(10)/GYRO_LSB_SENSITIVITY)+setparamData.yGyroCal;
+  ret[5]=(READ_SB(12)/GYRO_LSB_SENSITIVITY)+setparamData.zGyroCal;
 }
 float acc2radX(const float* in){
   return -atan2(in[1],sqrt(in[0]*in[0]+in[2]*in[2]));//センサー値を角度に変換
