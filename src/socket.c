@@ -150,9 +150,12 @@ void* socketThread(){//主にデータを受信するスレッド
       case PB1_DISARM://データなし
         armed=0;
         break;
+      case PB1_PRINT_DMP:
+        dmp();
+        break;
       }
     }
-    cleanSock();
+    
   }
 }
 

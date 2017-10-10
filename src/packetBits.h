@@ -65,4 +65,6 @@ struct sendStat_o {
   uint8_t armed;
 };
 
+#define PB1_PRINT_DMP 9//ディスアーム
+
 #endif // _PACKETBITS_H_

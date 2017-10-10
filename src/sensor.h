@@ -14,7 +14,7 @@
 
 #define MPU6050_ADDR         0x68 // MPU-6050 device address
 #define MPU6050_SMPLRT_DIV   0x19 // MPU-6050 register address
-#define MPU6050_CONFIG       0x1a
+#define MPU6050_CONFIG       0x1a // See https://www.invensense.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
 #define MPU6050_GYRO_CONFIG  0x1b
 #define MPU6050_ACCEL_CONFIG 0x1c
 #define MPU6050_WHO_AM_I     0x75
@@ -31,6 +31,7 @@ void readSensor(float* ret);
 void averageSensor(float* ret,int16_t samples);
 float acc2radX(const float* in);
 float acc2radY(const float* in);
+uint8_t dmp();
 void* sense();
 
 #endif

@@ -17,6 +17,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 float curSensorVal[6] = {0,0,0,0,0,0};
 int i2cHandle = -1;
 
+static int i2cSensorBuffer[14];
+
 int cleanI2c(){
   i2cClose(i2cHandle);
   printf("i2c failed");
@@ -34,7 +36,7 @@ int initI2c(){
   if(i2cReadByteData(i2cHandle,MPU6050_WHO_AM_I)!=MPU6050_ADDR){
     return cleanI2c();
   }
-  i2cWriteByteData(i2cHandle,MPU6050_SMPLRT_DIV,0x00);// sample rate: 8kHz/(7+1) = 1kHz
+  i2cWriteByteData(i2cHandle,MPU6050_SMPLRT_DIV,0x01);// sample rate (investigating)
   i2cWriteByteData(i2cHandle,MPU6050_CONFIG,0x00);// disable DLPF, gyro output rate = 8kHz
   i2cWriteByteData(i2cHandle,MPU6050_GYRO_CONFIG,0x08); // gyro range: +/- 500dps
   i2cWriteByteData(i2cHandle,MPU6050_ACCEL_CONFIG,0x01);// accel range: +/- 4g
@@ -45,29 +47,17 @@ int initI2c(){
 }
 //https://github.com/emersion/node-i2c-mpu6050を参考にした
 
-uint16_t readWord(int cmd){
-  uint8_t high=i2cReadByteData(i2cHandle,cmd);
-  uint8_t low=i2cReadByteData(i2cHandle,cmd+1);
-  return (high << 8) + low;//上位ビット、下位ビットを結合させる
-}
-
-int16_t readWord2c(int cmd){
-  uint16_t value = readWord(cmd);
-
-  if (value >= 0x8000) {
-		return -((65535 - value) + 1);//補数
-	} else {
-		return value;
-	}
-}
+#define READ_SB(i) (float)((((int16_t)buffer[i]) << 8) | buffer[i+1])
 
 void readSensor(float* ret){
-  ret[0]=((float)readWord2c(ACCEL_XOUT)/ACCEL_LSB_SENSITIVITY)+setparamData.xCal;
-  ret[1]=((float)readWord2c(ACCEL_YOUT)/ACCEL_LSB_SENSITIVITY)+setparamData.yCal;
-  ret[2]=((float)readWord2c(ACCEL_ZOUT)/ACCEL_LSB_SENSITIVITY)+setparamData.zCal;
-  ret[3]=((float)readWord2c(GYRO_XOUT)/GYRO_LSB_SENSITIVITY)+setparamData.xGyroCal;
-  ret[4]=((float)readWord2c(GYRO_YOUT)/GYRO_LSB_SENSITIVITY)+setparamData.yGyroCal;
-  ret[5]=((float)readWord2c(GYRO_ZOUT)/GYRO_LSB_SENSITIVITY)+setparamData.zGyroCal;
+  i2cReadI2CBlockData(i2cHandle,ACCEL_XOUT,i2cSensorBuffer,14);
+  
+  ret[0]=(READ_SB(0)/ACCEL_LSB_SENSITIVITY)+setparamData.xCal;
+  ret[1]=(READ_SB(2)/ACCEL_LSB_SENSITIVITY)+setparamData.yCal;
+  ret[2]=(READ_SB(4)/ACCEL_LSB_SENSITIVITY)+setparamData.zCal;
+  ret[3]=(READ_SB(8)/GYRO_LSB_SENSITIVITY)+setparamData.xGyroCal;
+  ret[4]=(READ_SB(10)/GYRO_LSB_SENSITIVITY)+setparamData.yGyroCal;
+  ret[5]=(READ_SB(12)/GYRO_LSB_SENSITIVITY)+setparamData.zGyroCal;
 }
 float acc2radX(const float* in){
   return -atan2(in[1],sqrt(in[0]*in[0]+in[2]*in[2]));//センサー値を角度に変換
@@ -79,6 +69,10 @@ void complementary(float* in,float ratio){
   in[0]=(float)(ratio*in[0] + (1.0-ratio)*in[3]);
   in[1]=(float)(ratio*in[1] + (1.0-ratio)*in[4]);
   in[2]=(float)(ratio*in[2] + (1.0-ratio)*in[5]);
+}
+
+void dmp(){
+  printf("dmp(): %x",i2cReadByteData(i2cHandle,0x6A));
 }
 
 void* sense(){//センサー値を読み取るスレッド
