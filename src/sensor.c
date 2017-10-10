@@ -17,7 +17,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 float curSensorVal[6] = {0,0,0,0,0,0};
 int i2cHandle = -1;
 
-static int i2cSensorBuffer[14];
+static uint8_t i2cSensorBuffer[14];
 
 int cleanI2c(){
   i2cClose(i2cHandle);
@@ -47,7 +47,7 @@ int initI2c(){
 }
 //https://github.com/emersion/node-i2c-mpu6050を参考にした
 
-#define READ_SB(i) (float)((((int16_t)buffer[i]) << 8) | buffer[i+1])
+#define READ_SB(i) (float)((((int16_t)i2cSensorBuffer[i]) << 8) | i2cSensorBuffer[i+1])
 
 void readSensor(float* ret){
   i2cReadI2CBlockData(i2cHandle,ACCEL_XOUT,i2cSensorBuffer,14);

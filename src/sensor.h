@@ -31,7 +31,7 @@ void readSensor(float* ret);
 void averageSensor(float* ret,int16_t samples);
 float acc2radX(const float* in);
 float acc2radY(const float* in);
-uint8_t dmp();
+void dmp();
 void* sense();
 
 #endif
